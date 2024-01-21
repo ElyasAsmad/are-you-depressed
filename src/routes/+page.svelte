@@ -8,7 +8,12 @@
 	import type { SpotifyPlaylist, Item } from '$lib/types/SpotifyPlaylist';
 	import type { IPredictionData } from '$lib/types/PredictionResponse';
 
-	const depressionFacts = [
+	interface IDepressionFact {
+		message: string;
+		reference: string;
+	}
+
+	const depressionFacts: IDepressionFact[] = [
 		{
 			message:
 				'5% of adults globally experience depression, affecting over 280 million people.',
@@ -43,6 +48,7 @@
 	let predictionPromise: Promise<any>;
 	let predictionData: IPredictionData | undefined;
 	let predictionLoading: boolean = false;
+	let depressionFact: IDepressionFact;
 
 	async function linkToSpotify() {
 		redirectToAuthCodeFlow(clientID);
@@ -131,6 +137,8 @@
 			alert('Please select a playlist');
 			return;
 		}
+
+		depressionFact = depressionFacts[Math.floor(Math.random() * depressionFacts.length)];
 
 		predictionLoading = true;
 
@@ -256,10 +264,10 @@
 			<div>
 				<h1 class="text-xl font-bold">Did you know?</h1>
 				<p>
-					{depressionFacts[0].message}
+					{depressionFact.message}
 				</p>
-				<a href={depressionFacts[0].reference} class="text-sm underline text-blue-400">
-					{depressionFacts[0].reference}
+				<a href={depressionFact.reference} class="text-sm underline text-blue-400">
+					{depressionFact.reference}
 				</a>
 			</div>
 		</div>
@@ -275,13 +283,13 @@
 		<h1 class="text-2xl font-bold mb-2">Your Depression Card</h1>
 		<div class="mx-auto border rounded-lg p-4 w-full max-w-xl mb-4">
 			<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-				{'aga'}
+				{predictionData?.message}
 			</h5>
 			<p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">
-				{'aga'}
+				{predictionData?.suggestion}
 			</p>
 			<p class="text-sm text-gray-400">
-				{'aga'}
+				{predictionData?.probability}
 			</p>
 		</div>
 		<Button on:click={clearPrediction}>New Prediction</Button>
